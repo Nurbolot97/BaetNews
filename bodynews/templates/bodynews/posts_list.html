@@ -1,0 +1,14 @@
+{% extends "base.html" %}  
+  
+{% block title %}My blog{% endblock %}  
+  
+{% block content %}  
+{% for post in posts %}
+<div class="container">
+    <p>
+        <a href="{% url 'post_detail' post.pk %}">{{ post.body }}</a>
+    </p>
+
+</div>
+{% endfor %}
+{% endblock %}

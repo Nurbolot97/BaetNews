@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete comment{% endblock %}
+
+
+{% block content %}
+
+<h1>Are you sure?</h1>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Yes</button>
+    <button type="button"><a href="{% url 'post_list' %}">No</a></button>
+</form>
+
+  
+{% endblock %}
