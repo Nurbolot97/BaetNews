@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ post.body }}</h1>
+<h4>Created by {{ post.author }} on {{ post.pub_date }}</h4>
+<form method="POST">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit" value="add">Save</button>
+</form>
+
+{% for comment in comments %}
+<p>
+    {{ comment.body }}
+</p>
+<p>
+    Comment created by {{ comment.author }} at {{ comment.created_at }}
+<a href="{% url 'comment_delete' pk=pk %}">Delete</a>
+</p>
+{% endfor %}
+
+{% endblock %}
