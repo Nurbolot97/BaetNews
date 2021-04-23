@@ -1,0 +1,22 @@
+.container {
+    padding-top: 20px;
+    padding-left: 250px;
+    padding-right: 5px;
+}
+
+
+.rules {
+    margin-left: 30px;
+    padding-left: 30px;
+    font-family:'Times New Roman', Times, serif;
+    background-color: rgb(215, 243, 234);
+}
+
+.card {
+    margin-left: 30px;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 10px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: large;
+}

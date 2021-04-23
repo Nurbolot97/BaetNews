@@ -5,33 +5,19 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 
-class PublishedManager(models.Manager):
-    def get_queryset(self):
-        return super(PublishedManager,
-        self).get_queryset().filter(status='published')
-
-
 class Post(models.Model):
-    STATUS_CHOICES = (
-        ('draft', 'Draft'),
-        ('published', 'Published')
-    )
-    title = models.CharField(max_length=200)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
-    body = models.TextField()
-    pub_date = models.DateTimeField(default=timezone.now)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(max_length=255, unique_for_date='pub_date')
-    status = models.CharField(max_length=10,
-                            choices=STATUS_CHOICES,
-                            default='published')
-    odjects = models.Manager()
-    published = PublishedManager()
 
-    def publish(self):
-        self.pub_date = timezone.now()
-        self.save()
+    title = models.CharField(max_length=200, verbose_name="Наименование")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name="Автор")
+    body = models.TextField(verbose_name="Тело поста")
+    pub_date = models.DateTimeField(default=timezone.now, verbose_name="Время публикации")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Время обновления")
+    slug = models.SlugField(max_length=255, unique_for_date='pub_date')
+
+
+    def get_absolute_url(self):
+        return reverse('post_detail', kwargs={'slug': self.slug})
 
     class Meta():
         ordering = ('-pub_date',)
@@ -45,9 +31,9 @@ class Post(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_comments')
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    body = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    body = models.TextField(verbose_name="Тело комментария")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Время обновления")
 
     class Meta:
         ordering = ('-created_at',)
@@ -56,6 +42,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comments by {self.author} on {self.post}"
+
+
+class PostImage(models.Model):
+
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='posts', verbose_name="Картинки новостей")
+
 
 
 
