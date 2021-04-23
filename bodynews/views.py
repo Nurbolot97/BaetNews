@@ -1,14 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from . models import Post, PublishedManager, Comment
+from django.views.generic import (ListView, CreateView, 
+                                    DetailView, View
+                                    )
+
+from .models import Post, Comment
 from .forms import PostForm, CommentForm
 
 
-def post_list(request):
-    posts = Post.published.all()
-    return render(request, 'bodynews/posts_list.html', locals())
+class PostDetailView(DetailView):
 
-def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    model = Post
+    template_name = 'bodynews/post_detail.html'
+    context_object_name = 'post'
+    pk_url_kwarg = 'post_pk'
+
+def post_detail(request, slug):
+    post = get_object_or_404(Post, slug=post.slug)
     comments = post.comments.all()
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
@@ -23,17 +30,6 @@ def post_detail(request, pk):
         comment_form = CommentForm()
     return render(request, 'bodynews/post_detail.html', locals())
 
-def new_post(request):
-    if request.method == "POST":
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('post_list')
-    else:
-        form = PostForm()
-    return render(request, 'bodynews/new_post.html', locals())
 
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
@@ -42,3 +38,24 @@ def delete_comment(request, pk):
         comment.delete()
         return redirect('post_list')
     return render(request, 'bodynews/delete_comment.html', locals())
+
+
+class RulesView(View):
+
+    def get(self, request):
+        return render(request, 'rules.html', locals())
+
+
+class PostListView(ListView):
+
+    model = Post
+    template_name = 'base.html'
+    context_object_name = 'posts'
+
+
+class PostCreateView(CreateView):
+
+    model = Post
+    template_name = 'bodynews/new_post.html'
+    form_class = PostForm
+    context_object_name = 'post'
