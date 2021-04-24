@@ -10,6 +10,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200, verbose_name="Наименование")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', verbose_name="Автор")
     body = models.TextField(verbose_name="Тело поста")
+    avatar = models.ImageField(verbose_name="Картинка новостя", null=True, upload_to="posts")
     pub_date = models.DateTimeField(default=timezone.now, verbose_name="Время публикации")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Время обновления")
@@ -44,10 +45,6 @@ class Comment(models.Model):
         return f"Comments by {self.author} on {self.post}"
 
 
-class PostImage(models.Model):
-
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='posts', verbose_name="Картинки новостей")
 
 
 

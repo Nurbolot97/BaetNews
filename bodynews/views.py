@@ -7,15 +7,8 @@ from .models import Post, Comment
 from .forms import PostForm, CommentForm
 
 
-class PostDetailView(DetailView):
-
-    model = Post
-    template_name = 'bodynews/post_detail.html'
-    context_object_name = 'post'
-    pk_url_kwarg = 'post_pk'
-
 def post_detail(request, slug):
-    post = get_object_or_404(Post, slug=post.slug)
+    post = get_object_or_404(Post, slug=slug)
     comments = post.comments.all()
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
